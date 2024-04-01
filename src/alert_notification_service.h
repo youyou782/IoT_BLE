@@ -8,7 +8,7 @@
 #include "gatt_service.h"
 
 class CAlertNotificationService : public CGattService {
-   public:
+  public:
 #define ANS_ALERT_CATEGORY_COUNT (10)
 	/**
 	 * @brief Alert notification control point commands, as defined in the Alert Notification Specification.
@@ -71,38 +71,38 @@ class CAlertNotificationService : public CGattService {
 	union alert_status_t {
 		uint16_t value;
 		struct alert_status_fields {
-			uint8_t category;  //!< The alert category
-			uint8_t count;	   //!< The number of unread alerts
+			uint8_t category; //!< The alert category
+			uint8_t count;	  //!< The number of unread alerts
 		} fields;
 	};
 
-   private:
-	uint32_t _button_press_count;  //!< The number of button press counts since the system startup
-	InterruptIn _button;		   //!< The system Button that will be used for capturing alerts
+  private:
+	uint32_t _button_press_count; //!< The number of button press counts since the system startup
+	InterruptIn _button;		  //!< The system Button that will be used for capturing alerts
 
-	int _supported_new_alert_category_index;	 //!< The index of the supported new alert category in
-												 //!< _characteristics container
-	int _supported_unread_alert_category_index;	 //!< The index of the supported unread alert category
+	int _supported_new_alert_category_index;	//!< The index of the supported new alert category in
+												//!< _characteristics container
+	int _supported_unread_alert_category_index; //!< The index of the supported unread alert category
+												//!< characteristic in _characteristics container
+	int _unread_alert_status_index;				//!< The index of the unread alert status characteristic in
+												//!< _characteristics container
+	int _new_alert_index; //!< The index of the new alert characteristic in _characteristics
+						  //!< container
+	int _alert_notification_control_point_index; //!< The index of the alert notification control point
 												 //!< characteristic in _characteristics container
-	int _unread_alert_status_index;				 //!< The index of the unread alert status characteristic in
-												 //!< _characteristics container
-	int _new_alert_index;  //!< The index of the new alert characteristic in _characteristics
-						   //!< container
-	int _alert_notification_control_point_index;  //!< The index of the alert notification control point
-												  //!< characteristic in _characteristics container
-												  // NOTE: The values of the characteristics
+												 // NOTE: The values of the characteristics
 
-	uint16_t _supported_new_alert_category;		//!< supported new alerts configuration
-	uint16_t _supported_unread_alert_category;	//!< supported unread alert configuration
-	uint16_t _enabled_new_alert_category;		//!< Enabled new alert alerts by the current client
-	uint16_t _enabled_unread_alert_category;	//!< Enabled unread alerts by the current client
+	uint16_t _supported_new_alert_category;	   //!< supported new alerts configuration
+	uint16_t _supported_unread_alert_category; //!< supported unread alert configuration
+	uint16_t _enabled_new_alert_category;	   //!< Enabled new alert alerts by the current client
+	uint16_t _enabled_unread_alert_category;   //!< Enabled unread alerts by the current client
 
-	alert_status_t _alert_status[ANS_ALERT_CATEGORY_COUNT];	 //!< Alert status for each supported alert
+	alert_status_t _alert_status[ANS_ALERT_CATEGORY_COUNT]; //!< Alert status for each supported alert
 
-   protected:
+  protected:
 	void buttonPressedHandler();
 
-   public:
+  public:
 	CAlertNotificationService() = delete;
 	CAlertNotificationService(const CAlertNotificationService &) = delete;
 	CAlertNotificationService &operator=(const CAlertNotificationService &) = delete;
@@ -112,9 +112,8 @@ class CAlertNotificationService : public CGattService {
 
 	ble_error_t createService(const char *uuid) = delete;
 
-	virtual void onDataWrittenHandler(GattCharacteristic *characteristic,
-									  const uint8_t *data,
-									  uint16_t size) final;
+	virtual void
+		onDataWrittenHandler(GattCharacteristic *characteristic, const uint8_t *data, uint16_t size) final;
 
 	virtual void onConnected(void) final;
 	virtual void onDisconnected(void) final;

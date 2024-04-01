@@ -5,16 +5,14 @@
 #include <memory>
 #include <vector>
 
-
 class CGattService : mbed::NonCopyable<CGattService> {
-   protected:
+  protected:
 	std::vector<std::vector<GattAttribute *>>
-		_characteristics_user_descriptions;	 //!< The user description attributes of all the characteristics
-	std::vector<GattCharacteristic *> _characteristics;	 //!< The characteristics of the service
+		_characteristics_user_descriptions; //!< The user description attributes of all the characteristics
+	std::vector<GattCharacteristic *> _characteristics; //!< The characteristics of the service
 
-	std::unique_ptr<GattService> _service;	//!< The service encapsulated in unique pointer
-   public:
-
+	std::unique_ptr<GattService> _service; //!< The service encapsulated in unique pointer
+  public:
 	CGattService();
 	~CGattService();
 	bool addCharacteristic(const UUID &uuid,
@@ -22,7 +20,6 @@ class CGattService : mbed::NonCopyable<CGattService> {
 						   const char *user_description = nullptr,
 						   uint8_t *value = nullptr,
 						   size_t max_value_size = 0);
-
 
 	template <typename T>
 	bool addCharacteristic(const UUID &uuid,
@@ -36,20 +33,17 @@ class CGattService : mbed::NonCopyable<CGattService> {
 		}
 		// 2. Call the base class addCharacteristic for the value type
 
-        const uint8_t* valueBuffer = reinterpret_cast<const uint8_t*>(&value);
-        return addCharacteristic(uuid, properties, user_description, const_cast<uint8_t*>(valueBuffer), sizeof(T));
-		
-		
+		const uint8_t *valueBuffer = reinterpret_cast<const uint8_t *>(&value);
+		return addCharacteristic(
+			uuid, properties, user_description, const_cast<uint8_t *>(valueBuffer), sizeof(T));
 	}
 
 	GattCharacteristic *getCharacteristicWithValueHandle(const GattAttribute::Handle_t &value_handle) const;
 
-
 	const char *getCharacteristicUserDescription(const GattAttribute::Handle_t &value_handle) const;
 
-	virtual void onDataWrittenHandler(GattCharacteristic *characteristic,
-									  const uint8_t *data,
-									  uint16_t size) = 0;
+	virtual void
+		onDataWrittenHandler(GattCharacteristic *characteristic, const uint8_t *data, uint16_t size) = 0;
 
 	ble_error_t createService(const UUID &uuid);
 
@@ -71,7 +65,6 @@ class CGattService : mbed::NonCopyable<CGattService> {
 		return bool(_service);
 	}
 
-
 	virtual void registerService(ble::BLE &ble);
 
 	/**
@@ -86,31 +79,27 @@ class CGattService : mbed::NonCopyable<CGattService> {
 	 */
 	virtual void onDisconnected(void) = 0;
 
-
 	template <typename T>
 	static ble_error_t getCharacteristicValue(GattCharacteristic &characteristic, T &value) {
 		ble::GattServer &server = ble::BLE::Instance().gattServer();
 
 		uint16_t value_size = sizeof(T);
-        auto error_code = server.read(characteristic.getValueHandle(), &value, &value_size);
+		auto error_code = server.read(characteristic.getValueHandle(), &value, &value_size);
 
-		if(value_size > sizeof(T)){
-            return BLE_ERROR_BUFFER_OVERFLOW;
-        }
+		if (value_size > sizeof(T)) {
+			return BLE_ERROR_BUFFER_OVERFLOW;
+		}
 		return error_code;
-		
 	}
-
 
 	template <typename T>
 	static ble_error_t setCharacteristicValue(GattCharacteristic &characteristic, T &value) {
 		ble::GattServer &server = ble::BLE::Instance().gattServer();
 
-        auto error_code = server.write(characteristic.getValueHandle(),
-                                        reinterpret_cast<const uint8_t *>(&value),
-                                        sizeof(T),
-                                        false);
+		auto error_code = server.write(characteristic.getValueHandle(),
+									   reinterpret_cast<const uint8_t *>(&value),
+									   sizeof(T),
+									   false);
 		return error_code;
-		
 	}
 };

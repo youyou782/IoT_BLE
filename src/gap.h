@@ -4,24 +4,25 @@
 
 #include <string>
 class CGap : private mbed::NonCopyable<CGap>, public ble::Gap::EventHandler {
-   protected:
-	ble::BLE &_ble;			   //!< A reference to the BLE system's BLE object instance
-	EventQueue &_event_queue;  //!< A reference to the application's EventQueue
-	std::string _device_name;  //!< The name of the device.
+  protected:
+	ble::BLE &_ble;			  //!< A reference to the BLE system's BLE object instance
+	EventQueue &_event_queue; //!< A reference to the application's EventQueue
+	std::string _device_name; //!< The name of the device.
 
-	DigitalOut _led;  //!< The system LED that will be used for indicating advertisement and connection status
-	int _led_event_id;	//!< The Event identifier (returned by EventQueue::call_every function)
+	DigitalOut _led; //!< The system LED that will be used for indicating advertisement and connection status
+	int _led_event_id; //!< The Event identifier (returned by EventQueue::call_every function)
 
-	ble::AdvertisingDataBuilder _adv_data_builder;	//!< Advertisement data builder that will be used for
-													//!< creating, storing and manipulating advertisement data
-	uint8_t _adv_data_buffer[ble::LEGACY_ADVERTISING_MAX_SIZE];	 //!< The buffer that is used by the
-																 //!< advertisement data builder
+	ble::AdvertisingDataBuilder _adv_data_builder; //!< Advertisement data builder that will be used for
+												   //!< creating, storing and manipulating advertisement data
+	uint8_t _adv_data_buffer[ble::LEGACY_ADVERTISING_MAX_SIZE]; //!< The buffer that is used by the
+																//!< advertisement data builder
 	mbed::Callback<void(ble::BLE &)> _on_ble_init_callback;
 
 	mbed::Callback<void(void)> _on_connected;
 
 	mbed::Callback<void(void)> _on_disconnected;
-   protected:
+
+  protected:
 	void toggleLED();
 	void updateAdvertisementData();
 	virtual void onBLEInitCompleteHandler(BLE::InitializationCompleteCallbackContext *context);
@@ -29,7 +30,7 @@ class CGap : private mbed::NonCopyable<CGap>, public ble::Gap::EventHandler {
 	virtual void onConnectionComplete(const ble::ConnectionCompleteEvent &event) override;
 	virtual void onDisconnectionComplete(const ble::DisconnectionCompleteEvent &event) override;
 
-   public:
+  public:
 	CGap() = delete;
 	CGap(const CGap &) = delete;
 	CGap(ble::BLE &ble,

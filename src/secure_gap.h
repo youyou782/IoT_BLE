@@ -6,12 +6,11 @@
  *
  */
 class CSecureGap : public CGap, public ble::SecurityManager::EventHandler {
-   private:
-   protected:
-
+  private:
+  protected:
 	virtual void onBLEInitCompleteHandler(BLE::InitializationCompleteCallbackContext *context) override;
 
-   public:
+  public:
 	CSecureGap() = delete;
 	CSecureGap(const CSecureGap &) = delete;
 	CSecureGap &operator=(const CSecureGap &) = delete;
